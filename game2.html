@@ -2,49 +2,54 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>משחק סוף שנה - מזהה מושגי תכנות</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>משחק סוף שנה - מזהה מושגי תכנות</title>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* הגדרות בסיס - MOBILE FIRST */
     body {
       font-family: 'Assistant', sans-serif;
       direction: rtl;
       background-color: #e0f7fa; /* צבע רקע בהיר */
       text-align: center;
-      padding: 20px;
+      padding: 15px; /* פאדינג קטן יותר למובייל */
       margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
       box-sizing: border-box;
+      font-size: 16px; /* גודל פונט בסיסי, ניתן לשנות ל-1rem או 3.5vw */
     }
 
     #container {
       background-color: #ffffff;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-      width: 90%;
+      padding: 20px; /* פאדינג קטן יותר למובייל */
+      width: 95%; /* רוחב גדול יותר למובייל כדי למלא את המסך */
       max-width: 700px;
       margin-bottom: 20px;
       display: none; /* מוסתר בהתחלה, יוצג רק אחרי סיסמה נכונה */
     }
 
-    /* CSS חדש עבור מסך הסיסמה */
+    /* CSS עבור מסך הסיסמה */
     #password-protection {
         text-align: center;
         padding: 20px;
-        margin-top: 50px;
+        margin-top: 20px; /* פאדינג קטן יותר למובייל */
         background-color: #ffffff;
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        width: 90%;
+        width: 95%; /* רוחב גדול יותר למובייל */
         max-width: 500px;
         box-sizing: border-box;
+        display: flex; /* כדי למרכז את התוכן בפנים */
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
     #password-protection input[type="password"] {
-        font-size: 1.2em;
+        font-size: 1.1em; /* יחסית לגודל הפונט הבסיסי ב-body */
         padding: 12px;
         width: calc(100% - 24px);
         max-width: 250px;
@@ -55,29 +60,33 @@
     }
     #password-protection button {
         margin-top: 15px;
+        font-size: 1.1em; /* יחסית לגודל הפונט הבסיסי ב-body */
+        padding: 10px 20px;
     }
     .password-error {
         color: #d32f2f;
         margin-top: 10px;
         font-weight: bold;
+        font-size: 0.9em; /* קצת קטן יותר */
     }
 
     h1 {
       color: #00796b; /* צבע כותרת ראשי */
-      font-size: 2.5em;
-      margin-bottom: 20px;
+      font-size: 2em; /* גודל פונט יחסי */
+      margin-bottom: 15px;
     }
 
     h2 {
       color: #00796b;
-      font-size: 2em;
-      margin-bottom: 15px;
+      font-size: 1.6em; /* גודל פונט יחסי */
+      margin-bottom: 10px;
     }
 
     p {
       color: #333;
-      font-size: 1.1em;
+      font-size: 0.95em; /* יחסית לגודל הפונט הבסיסי ב-body */
       line-height: 1.6;
+      margin-bottom: 10px;
     }
 
     #intro, #game, #results {
@@ -85,9 +94,9 @@
     }
 
     img {
-      max-width: 100%; /* התמונה תתאים לגודל הקונטיינר */
+      max-width: 95%; /* התמונה תתאים לגודל הקונטיינר, קצת מרווח מהצדדים */
       height: auto;
-      margin-top: 20px;
+      margin-top: 15px;
       border: 1px solid #ddd;
       border-radius: 8px;
       padding: 5px;
@@ -95,11 +104,11 @@
     }
 
     input[type="text"] {
-      font-size: 1.2em;
-      padding: 12px;
-      width: calc(100% - 24px); /* כדי שייקח את כל הרוחב בתוספת הפאדינג */
+      font-size: 1.1em; /* יחסית לגודל הפונט הבסיסי ב-body */
+      padding: 10px;
+      width: calc(100% - 20px); /* כדי שייקח את כל הרוחב בתוספת הפאדינג */
       max-width: 400px;
-      margin: 20px auto;
+      margin: 15px auto;
       border: 2px solid #00796b;
       border-radius: 8px;
       box-sizing: border-box; /* חשוב לשמירה על הרוחב */
@@ -108,13 +117,14 @@
     button {
       background-color: #00796b; /* כפתורים ירוקים-כחולים */
       color: white;
-      padding: 12px 25px;
-      font-size: 1.2em;
+      padding: 10px 20px;
+      font-size: 1.1em; /* יחסית לגודל הפונט הבסיסי ב-body */
       border: none;
       border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s ease;
       margin: 5px;
+      min-width: 120px; /* כדי שכפתורים לא יהיו קטנים מדי במובייל */
     }
 
     button:hover {
@@ -122,22 +132,22 @@
     }
 
     .timer {
-      font-size: 1.8em;
+      font-size: 1.4em; /* יחסית לגודל הפונט הבסיסי ב-body */
       color: #d32f2f; /* אדום כהה לשעון */
-      margin: 20px 0;
+      margin: 15px 0;
       font-weight: bold;
     }
 
     .question-counter {
-        font-size: 1.1em;
+        font-size: 0.9em;
         color: #555;
         margin-bottom: 10px;
     }
 
     .feedback {
-      font-size: 1.3em;
-      margin-top: 20px;
-      padding: 10px;
+      font-size: 1.2em; /* יחסית לגודל הפונט הבסיסי ב-body */
+      margin-top: 15px;
+      padding: 8px;
       border-radius: 8px;
     }
 
@@ -147,7 +157,7 @@
     .feedback.timeout { background-color: #eceff1; color: #616161; }
 
     #final-score-display {
-        font-size: 1.8em;
+        font-size: 1.5em; /* יחסית לגודל הפונט הבסיסי ב-body */
         color: #00796b;
         font-weight: bold;
         margin-top: 15px;
@@ -155,19 +165,55 @@
     }
 
     #success-rate-message {
-        margin-top: 25px;
-        font-size: 1.3em;
+        margin-top: 20px;
+        font-size: 1.2em; /* יחסית לגודל הפונט הבסיסי ב-body */
         font-weight: bold;
         color: #004d40;
     }
 
-    /* רספונסיביות בסיסית */
-    @media (max-width: 600px) {
-      h1 { font-size: 2em; }
-      h2 { font-size: 1.6em; } /* תיקון גודל h2 לנייד */
-      /* תיקון: הגדלים ב-em עבור p, input, button וכו' בנייד היו גדולים מדי. הורדתי אותם ל-1em / 1.1em כדי שיתאימו לגדלים המקוריים שביקשת. */
-      p, input, button, .timer, .feedback, #final-score-display, #success-rate-message { font-size: 1.1em; }
-      #container, #password-protection { padding: 20px; } /* התאמת פאדינג */
+    /* מדיה קווריות - התאמות למסכים גדולים יותר (טאבלט ומעלה) */
+    @media (min-width: 600px) {
+      body {
+        padding: 30px;
+        font-size: 17px; /* גודל פונט בסיסי קצת גדול יותר לדסקטופ */
+      }
+      #container, #password-protection {
+        padding: 30px;
+        margin-top: 50px;
+      }
+      h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+      }
+      h2 {
+        font-size: 2em;
+        margin-bottom: 15px;
+      }
+      p {
+        font-size: 1.05em;
+      }
+      input[type="text"] {
+        padding: 12px;
+      }
+      button {
+        padding: 12px 25px;
+        font-size: 1.2em;
+      }
+      .timer {
+        font-size: 1.8em;
+      }
+      .question-counter {
+        font-size: 1.1em;
+      }
+      .feedback {
+        font-size: 1.3em;
+      }
+      #final-score-display {
+        font-size: 1.8em;
+      }
+      #success-rate-message {
+        font-size: 1.3em;
+      }
     }
 
   </style>
@@ -176,8 +222,7 @@
 
   <div id="password-protection">
       <h2>הכנס סיסמה כדי לגשת למשחק</h2>
-      <input type="password" id="game-password" placeholder="הקלד סיסמה">
-      <button onclick="checkPassword()">היכנס למשחק</button>
+      <input type="password" id="game-password" placeholder="הקלד סיסמה" autocomplete="off"> <button onclick="checkPassword()">היכנס למשחק</button>
       <p id="password-error-message" class="password-error"></p>
   </div>
 
@@ -191,7 +236,7 @@
         <span style="color: #c62828; font-weight: bold;">❌ תשובה שגויה = -5 נק׳</span><br>
         <span style="color: #616161; font-weight: bold;">⏱ אי תשובה = 0 נק׳</span>
       </p>
-      <p style="margin-top: 30px; font-size: 1.4em; color: #555;">פותח על ידי: אודי עומר</p>
+      <p style="margin-top: 30px; font-size: 1em; color: #555;">פותח על ידי: אודי עומר</p>
       <button onclick="startGame()">התחל משחק</button>
     </div>
 
@@ -201,8 +246,7 @@
       <div id="question-box">
         <img id="question-img" src="" alt="תמונה" />
         <br>
-        <input type="text" id="answer" placeholder="הקלד את תשובתך כאן...">
-        <br><br>
+        <input type="text" id="answer" placeholder="הקלד את תשובתך כאן..." autocomplete="off"> <br><br>
         <button onclick="submitAnswer()">שלח תשובה</button>
         <div class="feedback" id="feedback"></div>
       </div>
@@ -218,7 +262,6 @@
     const DEFAULT_TIME_PER_QUESTION = 20;
     const GAME_PASSWORD = "אודימשחק1"; // <--- !!! הגדר כאן את הסיסמה שלך !!!
 
-    // מערך השאלות יבנה אוטומטית מנתוני ה-CSV [game_images_eng_local.csv]
     const questions = [
       {
         image: "images/two_dimentional_array.png",
@@ -438,14 +481,13 @@
     ];
 
     let currentQuestionIndex = 0;
-    let score = 0; // ניקוד עבור השחקן היחיד
+    let score = 0;
     let timer;
     let seconds = DEFAULT_TIME_PER_QUESTION;
 
-    // --- קוד חדש לניהול הסיסמה ---
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById("password-protection").style.display = 'flex'; // הצג את מסך הסיסמה
-      document.getElementById("game-password").focus(); // מיקוד על שדה הסיסמה
+      document.getElementById("password-protection").style.display = 'flex';
+      document.getElementById("game-password").focus();
     });
 
     function checkPassword() {
@@ -453,28 +495,24 @@
         const errorMessageElement = document.getElementById("password-error-message");
 
         if (enteredPassword === GAME_PASSWORD) {
-            document.getElementById("password-protection").style.display = 'none'; // הסתר מסך סיסמה
-            document.getElementById("container").style.display = 'block'; // הצג את הקונטיינר הראשי של המשחק
-            document.getElementById("intro").style.display = 'block'; // הצג את מסך הפתיחה
+            document.getElementById("password-protection").style.display = 'none';
+            document.getElementById("container").style.display = 'block';
+            document.getElementById("intro").style.display = 'block';
         } else {
             errorMessageElement.innerText = "סיסמה שגויה. נסה שוב.";
-            document.getElementById("game-password").value = ''; // נקה את השדה
+            document.getElementById("game-password").value = '';
         }
     }
-    // --- סוף קוד חדש לניהול הסיסמה ---
-
 
     function startGame() {
-      // ערבוב השאלות כדי שיהיה פחות צפוי בכל משחק
       shuffleArray(questions);
-      document.getElementById("total-q-num").innerText = questions.length; // הצג את המספר הכולל של השאלות
+      document.getElementById("total-q-num").innerText = questions.length;
 
       document.getElementById("intro").style.display = 'none';
       document.getElementById("game").style.display = 'block';
       loadQuestion();
     }
     
-    // פונקציית ערבוב מערך (Fisher-Yates)
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -487,7 +525,6 @@
         return endGame();
       }
 
-      // עדכון מונה השאלות
       document.getElementById("current-q-num").innerText = currentQuestionIndex + 1;
 
       document.getElementById("feedback").innerText = '';
@@ -521,15 +558,13 @@
       let feedbackText = '';
       let feedbackClass = 'feedback '; 
       let pointsAwarded = 0;
-      let highestPointsFound = -Infinity; // נשמור את הניקוד הגבוה ביותר שנמצא
+      let highestPointsFound = -Infinity;
 
-      // אם המשתמש לא הזין תשובה
       if (answer === '') {
         feedbackText = '⏱ לא הוזנה תשובה. 0 נקודות.';
         feedbackClass += 'timeout';
         pointsAwarded = 0;
       } else {
-        // בודקים את כל התשובות האפשריות ומחפשים את ההתאמה עם הניקוד המקסימלי
         questions[currentQuestionIndex].answers.forEach(possibleAnswer => {
             if (possibleAnswer.text.toLowerCase() === answer) {
                 if (possibleAnswer.points > highestPointsFound) { 
@@ -538,7 +573,7 @@
             }
         });
 
-        if (highestPointsFound !== -Infinity) { // נמצאה התאמה כלשהי
+        if (highestPointsFound !== -Infinity) {
             pointsAwarded = highestPointsFound;
             if (pointsAwarded === 10) {
                 feedbackText = `✔ תשובה נכונה! (+${pointsAwarded} נקודות)`;
@@ -547,14 +582,14 @@
                 feedbackText = `✔ תשובה חלקית. (+${pointsAwarded} נקודות)`;
                 feedbackClass += 'partial';
             }
-        } else { // לא נמצאה התאמה
+        } else {
             pointsAwarded = -5;
             feedbackText = '❌ תשובה שגויה. (-5 נקודות)';
             feedbackClass += 'wrong';
         }
       }
 
-      score += pointsAwarded; // עדכון הניקוד של השחקן היחיד
+      score += pointsAwarded;
       document.getElementById("feedback").innerText = feedbackText + " (סה\"כ: " + score + " נק׳)";
       document.getElementById("feedback").className = feedbackClass;
 
@@ -568,13 +603,11 @@
       document.getElementById("game").style.display = 'none';
       document.getElementById("results").style.display = 'block';
 
-      // הצג ניקוד סופי
       document.getElementById("final-score-display").innerText = `הניקוד הסופי שלך: ${score} נקודות`;
 
-      // חישוב והצגת אחוז ההצלחה
-      const totalPossibleScore = questions.length * 10; // 10 נקודות לשאלה מקסימום
+      const totalPossibleScore = questions.length * 10;
       let successPercentage = 0;
-      if (totalPossibleScore > 0) { // מונע חלוקה באפס אם אין שאלות
+      if (totalPossibleScore > 0) {
           successPercentage = Math.round((score / totalPossibleScore) * 100);
       }
       
