@@ -44,7 +44,7 @@
       /* גובה קבוע או מוגבל במובייל - מחושב לפי מרווחים למעלה ולמטה */
       margin-top: 15px; /* מרווח קבוע מהחלק העליון */
       margin-bottom: 15px; /* מרווח קבוע מהחלק התחתון */
-      max-height: calc(100vh - 30px); /* 100vh פחות סך המרווחים (15px למעלה + 15px למטה) */
+      height: calc(var(--app-height) - 30px); /* 100vh פחות סך המרווחים (15px למעלה + 15px למטה) */
       overflow-y: auto; /* מאפשר גלילה רק בתוך הקונטיינר אם התוכן גדול מדי */
       -webkit-overflow-scrolling: touch; /* גלילה חלקה באייפון */
     }
@@ -288,7 +288,23 @@
       }
     }
 
-  </style>
+  
+body.fixed-height {
+  height: var(--app-height);
+}
+
+</style>
+
+<script>
+  function setAppHeight() {
+    const appHeight = window.innerHeight;
+    document.documentElement.style.setProperty('--app-height', `${appHeight}px`);
+    document.body.classList.add('fixed-height');
+  }
+  window.addEventListener('load', setAppHeight);
+  window.addEventListener('resize', setAppHeight);
+</script>
+
 </head>
 <body>
 
@@ -615,8 +631,7 @@
       document.getElementById("answer").focus(); 
       // וודא שהאלמנט של התשובה נגלל לתצוגה אם הוא מוסתר על ידי המקלדת
       // (כדאי להוסיף את זה אחרי שהאלמנט כבר בפוקוס)
-      document.getElementById("answer").scrollIntoView({ behavior: 'smooth', block: 'end' });
-    }
+      }
 
     function updateTimer() {
       seconds--;
