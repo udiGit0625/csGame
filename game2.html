@@ -1,0 +1,523 @@
+ <!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>משחק סוף שנה - מזהה מושגי תכנות</title>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100dvh;
+      font-family: 'Assistant', sans-serif;
+      direction: rtl;
+      background-color: #e0f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    #game-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100dvh;
+      width: 100%;
+      max-width: 700px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #d32f2f;
+      margin-bottom: 8px;
+    }
+
+    #question-img {
+      max-width: 90%;
+      max-height: 35vh;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: white;
+      margin: 8px 0;
+    }
+
+    #answer {
+      font-size: 1.1em;
+      padding: 10px;
+      width: 80%;
+      border: 2px solid #00796b;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    button {
+      background-color: #00796b;
+      color: white;
+      font-size: 1em;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+
+    .feedback {
+      font-size: 1em;
+      margin-top: 6px;
+      padding: 6px;
+      border-radius: 6px;
+    }
+
+    .correct { background-color: #e8f5e9; color: #2e7d32; }
+    .partial { background-color: #fffde7; color: #fbc02d; }
+    .wrong { background-color: #ffebee; color: #c62828; }
+    .timeout { background-color: #eceff1; color: #616161; }
+
+    #start-screen, #password-screen, #results-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100dvh;
+      padding: 16px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.6em;
+      color: #00796b;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1em;
+      color: #333;
+      margin: 6px 0;
+    }
+  </style>
+
+ </head>
+<body>
+  <div id="password-screen">
+    <h1>🔐 הכנס סיסמה</h1>
+    <input type="password" id="game-password" placeholder="הקלד סיסמה">
+    <button onclick="checkPassword()">כניסה</button>
+    <p id="password-error-message" class="feedback wrong"></p>
+  </div>
+
+  <div id="start-screen">
+    <h1>🎓 משחק סוף שנה: מזהה מושגי תכנות</h1>
+    <p>בכל שאלה תוצג תמונה.</p>
+    <p>יש לך 20 שניות לזהות את המושג הקשור אליה.</p>
+    <ul style="text-align:right; padding-inline-start: 20px;">
+      <li><span style="color:#2e7d32;">✔ תשובה מלאה = 10 נק'</span></li>
+      <li><span style="color:#fbc02d;">✔ חלקית = 5 נק'</span></li>
+      <li><span style="color:#c62828;">❌ שגויה = -5 נק'</span></li>
+      <li><span style="color:#616161;">⏱ אין תשובה = 0 נק'</span></li>
+    </ul>
+    <button onclick="startGame()">התחל משחק</button>
+  </div>
+
+  <div id="game-wrapper" style="display:none;">
+    <div class="section">
+      <div class="timer">⏱ זמן שנותר: <span id="time">20</span> שניות</div>
+      <div class="question-counter">שאלה <span id="current-q-num">1</span> מתוך <span id="total-q-num"></span></div>
+    </div>
+
+    <div class="section">
+      <img id="question-img" src="" alt="תמונה" />
+    </div>
+
+    <div class="section">
+      <input type="text" id="answer" placeholder="הקלד את תשובתך כאן..." autocomplete="off">
+      <button onclick="submitAnswer()">שלח תשובה</button>
+      <div class="feedback" id="feedback"></div>
+    </div>
+  </div>
+
+  <div id="results-screen">
+    <h2>🎉 סיימת את המשחק!</h2>
+    <p id="final-score-display"></p>
+    <p id="success-rate-message"></p>
+    <button onclick="location.reload()">שחק שוב</button>
+  </div>
+
+  <script>
+    const DEFAULT_TIME_PER_QUESTION = 20;
+    const GAME_PASSWORD = "אודימשחק1";
+
+    // מערך השאלות יבנה אוטומטית מנתוני ה-CSV
+    const questions = [
+      {
+        image: "images/two_dimentional_array.png",
+        answers: [
+          { text: "מערך דו-ממדי", points: 10 },
+          { text: "מערך דו ממדי", points: 10 },
+          { text: "matrix", points: 10 },
+          { text: "two dimentional array", points: 10 },
+          { text: "מטריצה", points: 10 }
+        ]
+      },
+      {
+        image: "images/to_close_parentheses.png",
+        answers: [
+          { text: "סגירת סוגריים", points: 10 },
+          { text: "to close parentheses", points: 10 },
+          { text: "לסגור סוגריים", points: 10 }
+        ]
+      },
+      {
+        image: "images/string.png",
+        answers: [
+          { text: "מחרוזת", points: 10 },
+          { text: "string", points: 10 }
+        ]
+      },
+      {
+        image: "images/run_code.png",
+        answers: [
+          { text: "קוד ריצה", points: 10 },
+          { text: "run code", points: 10 },
+          { text: "running code", points: 10 },
+          { text: "code", points: 5 }
+        ]
+      },
+      {
+        image: "images/pointer.png",
+        answers: [
+          { text: "מצביע", points: 10 },
+          { text: "pointer", points: 10 },
+          { text: "index", points: 5 },
+          { text: "אינדקס", points: 5 }
+        ]
+      },
+      {
+        image: "images/overriding.png",
+        answers: [
+          { text: "דריסה", points: 10 },
+          { text: "override", points: 10 },
+          { text: "overriding", points: 10 }
+        ]
+      },
+      {
+        image: "images/overloading.png",
+        answers: [
+          { text: "העמסה", points: 10 },
+          { text: "overloading", points: 10 }
+        ]
+      },
+      {
+        image: "images/objects_array.png",
+        answers: [
+          { text: "מערך עצמים", points: 10 },
+          { text: "objects array", points: 10 }
+        ]
+      },
+      {
+        image: "images/null_reference.png",
+        answers: [
+          { text: "הפנייה ריקה", points: 10 },
+          { text: "הפניה ריקה", points: 10 },
+          { text: "null reference", points: 10 },
+          { text: "null", points: 10 },
+          { text: "reference", points: 5 }
+        ]
+      },
+      {
+        image: "images/method_header.png",
+        answers: [
+          { text: "כותרת פעולה", points: 10 },
+          { text: "signature", points: 10 },
+          { text: "method header", points: 10 },
+          { text: "header", points: 5 },
+          { text: "כותרת", points: 5 }
+        ]
+      },
+      {
+        image: "images/inheritance.png",
+        answers: [
+          { text: "הורשה", points: 10 },
+          { text: "inheritance", points: 10 },
+          { text: "ירושה", points: 10 }
+        ]
+      },
+      {
+        image: "images/indentation.png",
+        answers: [
+          { text: "הזחה", points: 10 },
+          { text: "indentation", points: 10 },
+          { text: "אינדנטציה", points: 10 }
+        ]
+      },
+      {
+        image: "images/if_statement.png",
+        answers: [
+          { text: "הוראת תנאי", points: 10 },
+          { text: "if statement", points: 10 },
+          { text: "if", points: 10 },
+          { text: "תנאי", points: 10 }
+        ]
+      },
+      {
+        image: "images/endless_loop.png",
+        answers: [
+          { text: "לולאה אינסופית", points: 10 },
+          { text: "לולאה אין-סופית", points: 10 },
+          { text: "לולאה אין סופית", points: 10 },
+         { text: "endless loop", points: 10 }
+        ]
+      },
+      {
+        image: "images/encapsulation.png",
+        answers: [
+          { text: "הכמסה", points: 10 },
+          { text: "encapsulation", points: 10 }
+        ]
+      },
+      {
+        image: "images/empty_string.png",
+        answers: [
+          { text: "מחרוזת ריקה", points: 10 },
+          { text: "empty string", points: 10 } // לפי ה-CSV
+        ]
+      },
+      {
+        image: "images/documentation.png",
+        answers: [
+          { text: "תיעוד", points: 10 },
+          { text: "documentation", points: 10 }
+        ]
+      },
+      {
+        image: "images/copy_constructor.png",
+        answers: [
+          { text: "פעולה בונה מעתיקה", points: 10 },
+          { text: "copy constructor", points: 10 }
+        ]
+      },
+      {
+        image: "images/composite_object.png",
+        answers: [
+          { text: "עצם מורכב", points: 10 },
+          { text: "composite object", points: 10 }
+        ]
+      },
+      {
+        image: "images/class.png",
+        answers: [
+          { text: "מחלקה", points: 10 },
+          { text: "class", points: 10 }
+        ]
+      },
+      {
+        image: "images/casting.png",
+        answers: [
+          { text: "המרה", points: 10 },
+          { text: "casting", points: 10 }
+        ]
+      },
+      {
+        image: "images/c_sharp.png",
+        answers: [
+          { text: "סי שארפ", points: 10 },
+          { text: "c#", points: 10 },
+          { text: "C#", points: 10 },
+          { text: "סי-שארפ", points: 10 }
+        ]
+      },
+      {
+        image: "images/bug.png",
+        answers: [
+          { text: "באג בקוד", points: 10 },
+          { text: "bug int the code", points: 10 },
+          { text: "bug", points: 5 },
+          { text: "באג", points: 5 }
+        ]
+      },
+      {
+        image: "images/boolean_variable.png",
+        answers: [
+          { text: "משתנה בוליאני", points: 10 },
+          { text: "טיפוס בוליאני", points: 10 },
+          { text: "boolean type", points: 10 },
+          { text: "bool", points: 10 },
+          { text: "boolean variable", points: 10 }
+        ]
+      },
+      {
+        image: "images/assignment.png",
+        answers: [
+          { text: "השמה", points: 10 },
+          { text: "הוראת השמה", points: 10 },
+          { text: "assignment", points: 10 }
+        ]
+      },
+      {
+        image: "images/access_permision.png",
+        answers: [
+          { text: "הרשאת גישה", points: 10 },
+          { text: "private", points: 5 },
+          { text: "access permission", points: 10 },
+          { text: "private access permission", points: 10 },
+          { text: "הרשאת גישה פרטית", points: 10 },
+          { text: "פרטי", points: 5 }
+        ]
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timer;
+    let seconds = DEFAULT_TIME_PER_QUESTION;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById("password-screen").style.display = 'flex';
+      document.getElementById("game-password").focus();
+
+      document.getElementById("answer").addEventListener("focus", () => {
+        setTimeout(() => {
+          document.getElementById("answer").scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 300);
+      });
+    });
+
+    function checkPassword() {
+      const entered = document.getElementById("game-password").value.trim();
+      if (entered === GAME_PASSWORD) {
+        document.getElementById("password-screen").style.display = 'none';
+        document.getElementById("start-screen").style.display = 'flex';
+      } else {
+        document.getElementById("password-error-message").innerText = "סיסמה שגויה. נסה שוב.";
+        document.getElementById("game-password").value = '';
+      }
+    }
+
+    function startGame() {
+      shuffleArray(questions);
+      currentQuestionIndex = 0;
+      score = 0;
+      document.getElementById("start-screen").style.display = 'none';
+      document.getElementById("game-wrapper").style.display = 'flex';
+      document.getElementById("total-q-num").innerText = questions.length;
+      loadQuestion();
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function loadQuestion() {
+      if (currentQuestionIndex >= questions.length) {
+        return endGame();
+      }
+
+      document.getElementById("current-q-num").innerText = currentQuestionIndex + 1;
+      document.getElementById("feedback").innerText = '';
+      document.getElementById("feedback").className = 'feedback';
+      document.getElementById("answer").value = '';
+      document.getElementById("question-img").src = questions[currentQuestionIndex].image;
+      seconds = DEFAULT_TIME_PER_QUESTION;
+      document.getElementById("time").innerText = seconds;
+      clearInterval(timer);
+      timer = setInterval(updateTimer, 1000);
+      document.getElementById("answer").focus();
+    }
+
+    function updateTimer() {
+      seconds--;
+      document.getElementById("time").innerText = seconds;
+      if (seconds <= 0) {
+        clearInterval(timer);
+        evaluateAnswer('');
+      }
+    }
+
+    function submitAnswer() {
+      clearInterval(timer);
+      const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+      evaluateAnswer(userAnswer);
+    }
+
+    function evaluateAnswer(answer) {
+      let feedbackText = '';
+      let feedbackClass = 'feedback ';
+      let pointsAwarded = 0;
+      let highestPointsFound = -Infinity;
+
+      if (answer === '') {
+        feedbackText = '⏱ לא הוזנה תשובה. 0 נקודות.';
+        feedbackClass += 'timeout';
+      } else {
+        questions[currentQuestionIndex].answers.forEach(possible => {
+          if (possible.text.toLowerCase() === answer) {
+            if (possible.points > highestPointsFound) {
+              highestPointsFound = possible.points;
+            }
+          }
+        });
+
+        if (highestPointsFound !== -Infinity) {
+          pointsAwarded = highestPointsFound;
+          feedbackText = pointsAwarded === 10
+            ? `✔ תשובה נכונה! (+${pointsAwarded} נקודות)`
+            : `✔ תשובה חלקית. (+${pointsAwarded} נקודות)`;
+          feedbackClass += pointsAwarded === 10 ? 'correct' : 'partial';
+        } else {
+          pointsAwarded = -5;
+          feedbackText = '❌ תשובה שגויה. (-5 נקודות)';
+          feedbackClass += 'wrong';
+        }
+      }
+
+      score += pointsAwarded;
+      document.getElementById("feedback").innerText = feedbackText + ` (סה"כ: ${score} נק׳)`;
+      document.getElementById("feedback").className = feedbackClass;
+
+      setTimeout(() => {
+        currentQuestionIndex++;
+        loadQuestion();
+      }, 2000);
+    }
+
+    function endGame() {
+      document.getElementById("game-wrapper").style.display = 'none';
+      document.getElementById("results-screen").style.display = 'flex';
+      document.getElementById("final-score-display").innerText = `הניקוד הסופי שלך: ${score} נקודות`;
+
+      const totalPossible = questions.length * 10;
+      const percent = totalPossible > 0 ? Math.round((score / totalPossible) * 100) : 0;
+
+      let msg = '';
+      if (percent >= 95) msg = "מעולה. כל הכבוד!!";
+      else if (percent >= 85) msg = "טוב מאוד";
+      else if (percent >= 70) msg = "יש מקום לשיפור";
+      else msg = "האם למדת במגמה?";
+
+      document.getElementById("success-rate-message").innerText =
+        `אחוז ההצלחה שלך: ${percent}% - ${msg}`;
+    }
+  </script>
+</body>
+</html>
