@@ -220,7 +220,25 @@
     const DEFAULT_TIME_PER_QUESTION = 20;
     const GAME_PASSWORD = "אודימשחק1";
 
-    const questions = [
+   const questions = [
+      {
+        image: "images/two_dimentional_array.png",
+        answers: [
+          { text: "מערך דו-ממדי", points: 10 },
+          { text: "מערך דו ממדי", points: 10 },
+          { text: "matrix", points: 10 },
+          { text: "two dimentional array", points: 10 },
+          { text: "מטריצה", points: 10 }
+        ]
+      },
+      {
+        image: "images/to_close_parentheses.png",
+        answers: [
+          { text: "סגירת סוגריים", points: 10 },
+          { text: "to close parentheses", points: 10 },
+          { text: "לסגור סוגריים", points: 10 }
+        ]
+      },
       {
         image: "images/string.png",
         answers: [
@@ -229,10 +247,29 @@
         ]
       },
       {
+        image: "images/run_code.png",
+        answers: [
+          { text: "קוד ריצה", points: 10 },
+          { text: "run code", points: 10 },
+          { text: "running code", points: 10 },
+          { text: "code", points: 5 }
+        ]
+      },
+      {
         image: "images/pointer.png",
         answers: [
           { text: "מצביע", points: 10 },
-          { text: "pointer", points: 10 }
+          { text: "pointer", points: 10 },
+          { text: "index", points: 5 },
+          { text: "אינדקס", points: 5 }
+        ]
+      },
+      {
+        image: "images/overriding.png",
+        answers: [
+          { text: "דריסה", points: 10 },
+          { text: "override", points: 10 },
+          { text: "overriding", points: 10 }
         ]
       },
       {
@@ -241,9 +278,166 @@
           { text: "העמסה", points: 10 },
           { text: "overloading", points: 10 }
         ]
+      },
+      {
+        image: "images/objects_array.png",
+        answers: [
+          { text: "מערך עצמים", points: 10 },
+          { text: "objects array", points: 10 }
+        ]
+      },
+      {
+        image: "images/null_reference.png",
+        answers: [
+          { text: "הפנייה ריקה", points: 10 },
+          { text: "הפניה ריקה", points: 10 },
+          { text: "null reference", points: 10 },
+          { text: "null", points: 10 },
+          { text: "reference", points: 5 }
+        ]
+      },
+      {
+        image: "images/method_header.png",
+        answers: [
+          { text: "כותרת פעולה", points: 10 },
+          { text: "signature", points: 10 },
+          { text: "method header", points: 10 },
+          { text: "header", points: 5 },
+          { text: "כותרת", points: 5 }
+        ]
+      },
+      {
+        image: "images/inheritance.png",
+        answers: [
+          { text: "הורשה", points: 10 },
+          { text: "inheritance", points: 10 },
+          { text: "ירושה", points: 10 }
+        ]
+      },
+      {
+        image: "images/indentation.png",
+        answers: [
+          { text: "הזחה", points: 10 },
+          { text: "indentation", points: 10 },
+          { text: "אינדנטציה", points: 10 }
+        ]
+      },
+      {
+        image: "images/if_statement.png",
+        answers: [
+          { text: "הוראת תנאי", points: 10 },
+          { text: "if statement", points: 10 },
+          { text: "if", points: 10 },
+          { text: "תנאי", points: 10 }
+        ]
+      },
+      {
+        image: "images/endless_loop.png",
+        answers: [
+          { text: "לולאה אינסופית", points: 10 },
+          { text: "לולאה אין-סופית", points: 10 },
+          { text: "לולאה אין סופית", points: 10 },
+          { text: "endless loop", points: 10 }
+        ]
+      },
+      {
+        image: "images/encapsulation.png",
+        answers: [
+          { text: "הכמסה", points: 10 },
+          { text: "encapsulation", points: 10 }
+        ]
+      },
+      {
+        image: "images/empty_string.png",
+        answers: [
+          { text: "מחרוזת ריקה", points: 10 },
+          { text: "empty string", points: 10 }
+        ]
+      },
+      {
+        image: "images/documentation.png",
+        answers: [
+          { text: "תיעוד", points: 10 },
+          { text: "documentation", points: 10 }
+        ]
+      },
+      {
+        image: "images/copy_constructor.png",
+        answers: [
+          { text: "פעולה בונה מעתיקה", points: 10 },
+          { text: "copy constructor", points: 10 }
+        ]
+      },
+      {
+        image: "images/composite_object.png",
+        answers: [
+          { text: "עצם מורכב", points: 10 },
+          { text: "composite object", points: 10 }
+        ]
+      },
+      {
+        image: "images/class.png",
+        answers: [
+          { text: "מחלקה", points: 10 },
+          { text: "class", points: 10 }
+        ]
+      },
+      {
+        image: "images/casting.png",
+        answers: [
+          { text: "המרה", points: 10 },
+          { text: "casting", points: 10 }
+        ]
+      },
+      {
+        image: "images/c_sharp.png",
+        answers: [
+          { text: "סי שארפ", points: 10 },
+          { text: "c#", points: 10 },
+          { text: "C#", points: 10 },
+          { text: "סי-שארפ", points: 10 }
+        ]
+      },
+      {
+        image: "images/bug.png",
+        answers: [
+          { text: "באג בקוד", points: 10 },
+          { text: "bug int the code", points: 10 },
+          { text: "bug", points: 5 },
+          { text: "באג", points: 5 }
+        ]
+      },
+      {
+        image: "images/boolean_variable.png",
+        answers: [
+          { text: "משתנה בוליאני", points: 10 },
+          { text: "טיפוס בוליאני", points: 10 },
+          { text: "boolean type", points: 10 },
+          { text: "bool", points: 10 },
+          { text: "boolean variable", points: 10 }
+        ]
+      },
+      {
+        image: "images/assignment.png",
+        answers: [
+          { text: "השמה", points: 10 },
+          { text: "הוראת השמה", points: 10 },
+          { text: "assignment", points: 10 }
+        ]
+      },
+      {
+        image: "images/access_permision.png",
+        answers: [
+          { text: "הרשאת גישה", points: 10 },
+          { text: "private", points: 5 },
+          { text: "access permission", points: 10 },
+          { text: "private access permission", points: 10 },
+          { text: "הרשאת גישה פרטית", points: 10 },
+          { text: "פרטי", points: 5 }
+        ]
       }
-      // תוכל להוסיף כאן שאלות נוספות
     ];
+
 
     let currentQuestionIndex = 0;
     let score = 0;
